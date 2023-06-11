@@ -1,4 +1,4 @@
-package com.mail.anonmail.routes;
+package com.mail.anonmail.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -8,10 +8,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-public class SendMailRoute {
+public class SendMailController {
     @PostMapping(value ="/sendMail", consumes = {"application/json"})
     @ResponseBody
-    public String sendMail(@RequestBody String message) {
+    public void sendMail(@RequestBody String message) {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             MessageModel messageModel = objectMapper.readValue(message, MessageModel.class);
@@ -19,6 +19,5 @@ public class SendMailRoute {
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
-        return "index";
     }
 }
