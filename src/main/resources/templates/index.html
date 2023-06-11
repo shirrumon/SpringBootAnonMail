@@ -54,7 +54,9 @@
                 contentType: "application/json; charset=utf-8",
                 encode: true,
             }).done(() => {
-                alert("Success!")
+                alert("Success!");
+            }).fail(() => {
+                alert("Fail!");
             });
 
             event.preventDefault();
@@ -64,7 +66,7 @@
     function convertFormToJSON(form) {
         return $(form)
             .serializeArray()
-            .reduce(function (json, { name, value }) {
+            .reduce(function (json, {name, value}) {
                 json[name] = value;
                 return json;
             }, {});
