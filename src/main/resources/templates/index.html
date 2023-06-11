@@ -28,11 +28,11 @@
         return html`
             <form th:action="@{/sendMail}" method="post">
                 <div class="form-group">
-                    <input type="email" class="form-control" name="mailTo" placeholder="Email to"/>
+                    <input type="email" class="form-control" name="$mailTo" placeholder="Email to"/>
                     <br/>
-                    <input type="text" class="form-control" name="subject" placeholder="Subject" required/>
+                    <input type="text" class="form-control" name="$subject" placeholder="Subject" required/>
                     <br/>
-                    <textarea class="form-control" name="content" placeholder="Your mail..." required></textarea>
+                    <textarea class="form-control" name="$content" placeholder="Your mail..." required></textarea>
                 </div>
                 <br/>
                 <button class="btn btn-primary" type="submit">Submit</button>
@@ -43,13 +43,11 @@
     $(document).ready(() => {
         $("form").submit(event => {
             event.preventDefault();
-            const form = $("form");
-            const jsonForm = `{"$mailTo":"${form.find("[name='mailTo']").val()}", "$subject":"${form.find("[name='subject']").val()}", "$content":"${form.find("[name='content']").val()}"}`
 
             $.ajax({
                 type: "POST",
-                url: form.attr("action"),
-                data: jsonForm,
+                url: $(event.target).attr("action"),
+                data: JSON.stringify(convertFormToJSON(event.target)),
                 dataType: "json",
                 contentType: "application/json; charset=utf-8",
                 encode: true,
@@ -60,6 +58,15 @@
             event.preventDefault();
         });
     });
+
+    function convertFormToJSON(form) {
+        return $(form)
+            .serializeArray()
+            .reduce(function (json, { name, value }) {
+                json[name] = value;
+                return json;
+            }, {});
+    }
 
     render(html`
         <${App}/>`, document.body);
